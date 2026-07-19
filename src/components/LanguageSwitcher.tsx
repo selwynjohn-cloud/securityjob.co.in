@@ -14,6 +14,7 @@ const LABELS: Record<LanguageCode, string> = {
   te: 'తెలుగు',
   as: 'অসমীয়া',
   or: 'ଓଡ଼ିଆ',
+  kn: 'ಕನ್ನಡ',
 };
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {

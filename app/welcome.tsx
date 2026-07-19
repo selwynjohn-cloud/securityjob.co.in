@@ -41,7 +41,7 @@ const STATS = [
 export default function WelcomeScreen() {
   const router = useRouter();
   const { t, guide } = useApp();
-  const gender = guide ?? 'male';
+  const gender = guide ?? 'female';
 
   const vacancyExtra = useCallback(async () => {
     const jobs = await fetchLiveVacancies();
@@ -107,12 +107,13 @@ export default function WelcomeScreen() {
         </View>
 
         <Pressable style={styles.stage} onPress={speakAgain}>
-          <Image source={GUIDE[gender]} style={styles.guideImg} resizeMode="cover" />
-          <View style={styles.badge}>
-            <Ionicons name="shield" size={12} color={colors.gold} />
-            <Text style={styles.badgeText}>
-              {gender === 'male' ? t('guide.male') : t('guide.female')}
-            </Text>
+          <Image
+            source={GUIDE[gender]}
+            style={styles.guideImg}
+            resizeMode="cover"
+          />
+          <View style={styles.logoOnScreen}>
+            <Image source={LOGO} style={styles.logoOnScreenImg} resizeMode="contain" />
           </View>
           <View style={styles.hearPill}>
             <Ionicons name="volume-high" size={16} color={colors.white} />
@@ -249,30 +250,30 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
   },
   stage: {
-    height: 280,
+    height: 420,
     borderRadius: 18,
     overflow: 'hidden',
     borderWidth: 2,
     borderColor: colors.gold,
-    backgroundColor: colors.navySecondary,
+    backgroundColor: '#0a1628',
     marginBottom: spacing.md,
   },
   guideImg: { width: '100%', height: '100%' },
-  badge: {
+  logoOnScreen: {
     position: 'absolute',
     top: 12,
-    left: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(7,29,59,0.85)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-    borderWidth: 1,
+    right: 12,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.white,
+    borderWidth: 2,
     borderColor: colors.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
-  badgeText: { color: colors.white, fontWeight: '700', fontSize: 12 },
+  logoOnScreenImg: { width: 42, height: 42 },
   hearPill: {
     position: 'absolute',
     bottom: 14,

@@ -31,6 +31,7 @@ const WHISPER_LANG: Record<LanguageCode, string> = {
   te: 'te',
   as: 'as',
   or: 'or',
+  kn: 'kn',
 };
 
 export const DETECTED_LANGUAGE_LABELS: Record<string, string> = {
@@ -41,6 +42,7 @@ export const DETECTED_LANGUAGE_LABELS: Record<string, string> = {
   as: 'Assamese',
   or: 'Odia',
   od: 'Odia',
+  kn: 'Kannada',
 };
 
 function getApiKey(): string | undefined {

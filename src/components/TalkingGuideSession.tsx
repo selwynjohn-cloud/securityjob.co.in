@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
 import {
   ActivityIndicator,
   Alert,
@@ -28,6 +29,7 @@ import {
 import { stopTalking, talkAsGuide } from '../services/tts';
 import { validateField } from '../services/validation';
 import { useApp } from '../store/AppContext';
+import { useSpeechPlayback } from '../store/SpeechPlayback';
 import { colors } from '../theme/colors';
 import { spacing, typography } from '../theme/typography';
 import type { GuideGender } from '../types';
@@ -62,7 +64,8 @@ export function TalkingGuideSession({ onFinished }: Props) {
     setProfileField,
     setLanguage,
   } = useApp();
-  const gender: GuideGender = guide ?? 'male';
+  const { setReplay, releaseReplay } = useSpeechPlayback();
+  const gender: GuideGender = guide ?? 'female';
 
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>('talking');
@@ -108,7 +111,7 @@ export function TalkingGuideSession({ onFinished }: Props) {
     const intro =
       index === 0 ? `${t('talk.hello')}${questionText}` : questionText;
 
-    await talkAsGuide(intro, language);
+    await talkAsGuide(intro, language, gender);
     if (mySession !== sessionId.current) return;
 
     if (isPhoto) {
@@ -143,17 +146,32 @@ export function TalkingGuideSession({ onFinished }: Props) {
     t,
   ]);
 
+  // Keep the latest per-question speak fn in a ref so the focus effect below can
+  // re-speak the CURRENT question without re-subscribing on every unrelated
+  // render (e.g. a photo change).
+  const speakRef = useRef(speakAndWait);
   useEffect(() => {
-    speakAndWait();
-    return () => {
-      sessionId.current += 1;
-      stopTalking();
-      if (speechService.isListening) {
-        speechService.stopListening().catch(() => undefined);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, language]);
+    speakRef.current = speakAndWait;
+  });
+
+  // Own “Start Audio” only while this screen is focused, and re-speak each time
+  // the question (index) or language changes. Clearing on blur (owner-safe)
+  // stops a later screen from replaying a registration question.
+  useFocusEffect(
+    useCallback(() => {
+      const replay: () => void | Promise<void> = () => speakRef.current();
+      setReplay(replay);
+      replay();
+      return () => {
+        sessionId.current += 1;
+        releaseReplay(replay);
+        if (speechService.isListening) {
+          speechService.stopListening().catch(() => undefined);
+        }
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [index, language, setReplay, releaseReplay]),
+  );
 
   const pickPhoto = async (fromCamera: boolean) => {
     const perm = fromCamera
@@ -236,9 +254,9 @@ export function TalkingGuideSession({ onFinished }: Props) {
       }
       setPhase('review');
       if (text) {
-        await talkAsGuide(`${t('talk.isCorrect')} ${text}`, language);
+        await talkAsGuide(`${t('talk.isCorrect')} ${text}`, language, gender);
       } else {
-        await talkAsGuide(t('registration.voiceFailed'), language);
+        await talkAsGuide(t('registration.voiceFailed'), language, gender);
         setShowType(true);
       }
     } catch {
@@ -260,7 +278,7 @@ export function TalkingGuideSession({ onFinished }: Props) {
       return;
     }
     setProfileField(question.field, value);
-    await talkAsGuide(t('talk.good'), language);
+    await talkAsGuide(t('talk.good'), language, gender);
     advance();
   };
 

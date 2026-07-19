@@ -1,4 +1,4 @@
-export type LanguageCode = 'en' | 'hi' | 'ta' | 'te' | 'as' | 'or';
+export type LanguageCode = 'en' | 'hi' | 'ta' | 'te' | 'as' | 'or' | 'kn';
 
 /** Speech mode: auto-detect (Whisper) or force selected language */
 export type SpeechMode = 'auto' | 'manual';

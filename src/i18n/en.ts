@@ -22,21 +22,36 @@ export const en = {
     no: 'No',
     either: 'Either',
     done: 'Done',
+    stopAudio: 'Stop Audio',
+    startAudio: 'Start Audio',
   },
   splash: {
     brand: 'Agile Group',
     appName: 'Security Job',
     tagline: 'Speak. Register. Find Your Security Job.',
     organisation: 'Agile Security Force Pvt. Ltd.',
+    ourGuard: 'Our Guard will guide you',
+    ourGuardHint:
+      'A male or female Security Guide appears at random each time you open the app.',
+    meetAnother: 'Show another guide',
+    tapToHear: 'Tap guard to hear again',
+    speakingLive: 'GUIDE SPEAKING',
+    spokenIntroMale:
+      'Namaste. I am Security Guard Arjun, assigned duty to guide you today.',
+    spokenIntroFemale:
+      'Namaste. I am Security Guide Priya, assigned duty to guide you today.',
+    spokenBody:
+      'Welcome to Agile Security Force Private Limited. Security Job is India\'s first dedicated job portal for security careers. Verified jobs. Trusted opportunities. Secure futures. Visit Security Job dot co dot in. For our full range of services, visit Agile Group dot co dot in. Please select your language. This is an audio guided application — use headphones or increase the volume. Then tap Continue, and I will take you to the news desk.',
   },
   language: {
-    title: 'Choose your language',
+    title: 'Select your language',
     english: 'English',
     tamil: 'தமிழ்',
     hindi: 'हिन्दी',
     telugu: 'తెలుగు',
     assamese: 'অসমীয়া',
     odia: 'ଓଡ଼ିଆ',
+    kannada: 'ಕನ್ನಡ',
     hearSample: 'Hear sample',
     speechModeTitle: 'When you speak',
     speechAuto: 'Auto-detect my language',
@@ -46,6 +61,11 @@ export const en = {
     speechManualHint: 'Forces recognition in your selected language.',
     needsApiKey:
       'Cloud speech needs an API key on this device. Ask your admin to set EXPO_PUBLIC_OPENAI_API_KEY, or type your answer.',
+    audioTitle: 'Audio-guided app',
+    audioHint:
+      'This is an audio-guided application. Please use headphones or increase the volume.',
+    selectLanguage: '1. Select your language',
+    audioStep: '2. Audio guidance',
   },
   guide: {
     title: 'Choose your Security Guide',
@@ -55,7 +75,10 @@ export const en = {
   },
   welcome: {
     company: 'Agile Security Force',
-    platformTagline: "India's Most Trusted Security Career Platform",
+    legalName: 'Agile Security Force Private Limited',
+    platformTagline: "India's First Dedicated Job Portal for Security Careers",
+    promiseLine: 'Verified Jobs. Trusted Opportunities. Secure Futures.',
+    discoverServices: 'Discover our full range of services at www.agilegroup.co.in',
     message:
       'Hello! I am your Agile Security Force guide — proud to serve India\'s most trusted security family. For over 30 years Agile has protected sites across the nation, with 24,000+ guards and 500+ client companies. I will show open jobs from securityjob.co.in and help you register free in the same format as our website. After you register, our recruitment team will contact you and follow up.',
     spoken:
@@ -74,7 +97,8 @@ export const en = {
     statYears: '30+ Years',
     statGuards: '24,000+ Guards',
     statClients: '500+ Clients',
-    statFree: 'FREE Register',
+    statLocations: '1,410+ Locations',
+    statFree: 'Free Recruitment',
   },
   talk: {
     introTitle: 'Now I will take your details',
@@ -404,14 +428,24 @@ export const en = {
     hint: 'Reduces on-screen text. Full voice guidance arrives in a later milestone.',
   },
   studio: {
-    headline: 'Security Job Live with SG. Priya',
+    headline: 'Security Job Live — Welcome Desk',
     ticker: 'FREE registration · Recruiters call back within 24 hours · No fees',
+    welcomeBy: 'Welcome — your guide today is {{name}}',
     intro:
-      'Namaste. I am SG. Priya, Id.No. 010190073. Welcome to Agile Security Force — like your interactive TV news desk. Choose a channel below, or follow me.',
+      'Namaste. Welcome to Agile Security Force — your interactive TV news desk for security careers. I will guide you. Use the channels below to jump faster to what you need.',
+    whyJoinTitle: 'Why join with Agile?',
+    whyJoinBody:
+      'Agile Security Force is India\'s most trusted security family — 30+ years, 24,000+ guards, 500+ clients. We offer training, timely salary with PF & ESI, uniforms, and a proud career path.',
+    jumpHint: 'Jump faster — tap a numbered option (1–6) below:',
+    spokenIntroMale:
+      'Namaste. I am Security Guard Arjun, assigned duty to guide you today. Welcome to the Security Job news desk. Why join Agile? We are India\'s most trusted security family — over 30 years, 24,000 guards, 1,410 locations. Below you can jump faster — company, available jobs, future openings, free registration, recruitment anthem, or contact.',
+    spokenIntroFemale:
+      'Namaste. I am Security Guide Priya, assigned duty to guide you today. Welcome to the Security Job news desk. Why join Agile? We are India\'s most trusted security family — over 30 years, 24,000 guards, 1,410 locations. Below you can jump faster — company, available jobs, future openings, free registration, recruitment anthem, or contact.',
     spokenIntro:
-      'Namaste. I am Security Guide Priya. Turn up your volume. Choose your language, then pick a channel — Agile company, available jobs, future openings, free registration, recruitment anthem, or contact.',
-    volumeHint: 'Please turn up your volume to hear SG. Priya clearly.',
-    startWithPriya: 'Start with Priya — About Agile',
+      'Namaste. Welcome to Agile Security Force. I am your Security Guide on the news desk. Why join Agile? We are India\'s most trusted security family — over 30 years, 24,000 guards, 1,410 locations. Below you can jump faster — company, available jobs, future openings, free registration, recruitment anthem, or contact.',
+    volumeHint: 'Please turn up your volume or use headphones to hear your guide clearly.',
+    startWithPriya: 'Start with guide — About Agile',
+    startWithGuide: 'Start with guide — Why Join Agile',
     chCompany: '1. Agile — Most Trusted Company',
     chCompanySub: 'Why Agile is great for your career',
     chJobs: '2. Available Jobs',

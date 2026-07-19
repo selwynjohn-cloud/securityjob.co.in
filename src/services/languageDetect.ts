@@ -10,6 +10,7 @@ const WHISPER_TO_UI: Record<string, LanguageCode> = {
   as: 'as',
   or: 'or',
   od: 'or',
+  kn: 'kn',
 };
 
 /** Whisper ISO → securityjob.co.in Primary Language option */

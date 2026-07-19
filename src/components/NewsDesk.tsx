@@ -1,22 +1,20 @@
 import { ReactNode, useEffect, useState } from 'react';
 import {
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { PRIYA } from '../data/priya';
 import { colors } from '../theme/colors';
 import { spacing } from '../theme/typography';
+import { BrandHeader } from './BrandHeader';
+import { GuideStage, passportSize } from './GuideStage';
 import { LanguageSwitcher } from './LanguageSwitcher';
-
-const PRIYA_IMG = require('../../assets/images/female-agile-guide.png');
-const LOGO = require('../../assets/images/agile-group-logo.png');
 
 const MONTHS = [
   'Jan',
@@ -39,7 +37,8 @@ function formatTvStamp(d: Date): string {
   const year = d.getFullYear();
   const hh = String(d.getHours()).padStart(2, '0');
   const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${day} ${mon} ${year} · ${hh}:${mm}`;
+  const ss = String(d.getSeconds()).padStart(2, '0');
+  return `${day} ${mon} ${year}\n${hh}:${mm}:${ss}`;
 }
 
 interface Props {
@@ -50,9 +49,11 @@ interface Props {
   onHear?: () => void;
   showBack?: boolean;
   showLanguage?: boolean;
+  /** Continue Agile brand header above the TV bezel */
+  showBrandHeader?: boolean;
 }
 
-/** Interactive TV news desk frame with SG. Priya */
+/** Interactive TV news desk — aligned portrait guide + channels */
 export function NewsDesk({
   children,
   headline,
@@ -61,97 +62,131 @@ export function NewsDesk({
   onHear,
   showBack = true,
   showLanguage = true,
+  showBrandHeader = false,
 }: Props) {
   const router = useRouter();
+  const { width: winW } = useWindowDimensions();
   const [stamp, setStamp] = useState(() => formatTvStamp(new Date()));
+  const isWide = winW >= 720;
+
+  const { width: stageW, height: stageH } = passportSize(isWide ? 250 : 230);
 
   useEffect(() => {
     const tick = () => setStamp(formatTvStamp(new Date()));
     tick();
-    const id = setInterval(tick, 15_000);
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
-      <View style={styles.topBar}>
-        <View style={styles.topLeft}>
-          {showBack ? (
-            <Pressable onPress={() => router.back()} hitSlop={12} style={styles.iconBtn}>
-              <Ionicons name="arrow-back" size={22} color={colors.white} />
-            </Pressable>
-          ) : (
-            <View style={styles.iconBtn} />
-          )}
-          {showLanguage ? <LanguageSwitcher compact /> : null}
-        </View>
-
-        <View style={styles.liveChip}>
-          <View style={[styles.dot, speaking && styles.dotHot]} />
-          <Text style={styles.liveText}>
-            {speaking ? 'ON AIR' : 'SECURITY JOB NEWS'}
-          </Text>
-        </View>
-
-        <View style={styles.brandStamp}>
-          <Text style={styles.datestamp} numberOfLines={1}>
-            {stamp}
-          </Text>
-          <View style={styles.logoBadge}>
-            <Image source={LOGO} style={styles.logoCorner} resizeMode="contain" />
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.headlineBar}>
-        <Text style={styles.headline} numberOfLines={2}>
-          {headline}
-        </Text>
-      </View>
-
-      <View style={styles.desk}>
-        <Pressable style={styles.anchor} onPress={onHear} disabled={!onHear}>
-          <Image source={PRIYA_IMG} style={styles.priya} resizeMode="cover" />
-          <View style={styles.namePlate}>
-            <Text style={styles.name}>{PRIYA.name}</Text>
-            <Text style={styles.idNo}>Id.No. {PRIYA.idNo}</Text>
-          </View>
-          {onHear ? (
-            <View style={styles.hearFab}>
-              <Ionicons
-                name={speaking ? 'radio' : 'volume-high'}
-                size={16}
-                color={colors.navy}
-              />
-              <Text style={styles.hearFabText}>
-                {speaking ? 'Speaking…' : 'Tap to hear'}
-              </Text>
-            </View>
-          ) : null}
-        </Pressable>
-        <ScrollView
-          style={styles.panel}
-          contentContainerStyle={styles.panelContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {children}
-        </ScrollView>
-      </View>
-
-      {ticker ? (
-        <View style={styles.ticker}>
-          <Text style={styles.tickerLabel}>BREAKING</Text>
-          <Text style={styles.tickerText} numberOfLines={1}>
-            {ticker}
-          </Text>
+      {showBrandHeader ? (
+        <View style={styles.brandHeaderPad}>
+          <BrandHeader showStats compact />
         </View>
       ) : null}
+      <View style={styles.bezel}>
+        {!showBrandHeader ? (
+          <>
+            <View style={styles.topBar}>
+              <View style={styles.topLeft}>
+                {showBack ? (
+                  <Pressable onPress={() => router.back()} hitSlop={12} style={styles.iconBtn}>
+                    <Ionicons name="arrow-back" size={22} color={colors.white} />
+                  </Pressable>
+                ) : (
+                  <View style={styles.iconBtn} />
+                )}
+                {showLanguage ? <LanguageSwitcher compact /> : null}
+              </View>
+
+              <View style={styles.liveChip}>
+                <View style={[styles.dot, speaking && styles.dotHot]} />
+                <Text style={styles.liveText}>{speaking ? 'ON AIR' : 'LIVE'}</Text>
+              </View>
+
+              <View style={styles.topRightSpacer} />
+            </View>
+
+            {headline ? (
+              <View style={styles.headlineBar}>
+                <Text style={styles.network}>SECURITY JOB NEWS</Text>
+                <Text style={styles.headline} numberOfLines={2}>
+                  {headline}
+                </Text>
+              </View>
+            ) : null}
+          </>
+        ) : showBack || showLanguage ? (
+          <View style={styles.topBarSlim}>
+            {showBack ? (
+              <Pressable onPress={() => router.back()} hitSlop={12} style={styles.iconBtn}>
+                <Ionicons name="arrow-back" size={22} color={colors.white} />
+              </Pressable>
+            ) : (
+              <View style={styles.iconBtn} />
+            )}
+            {showLanguage ? <LanguageSwitcher compact /> : null}
+          </View>
+        ) : null}
+
+        <View style={[styles.body, isWide && styles.bodyWide]}>
+          <View style={[styles.stageWrap, isWide && styles.stageWrapWide]}>
+            <GuideStage
+              width={stageW}
+              height={stageH}
+              speaking={speaking}
+              onPress={onHear}
+              showStamp={stamp}
+            />
+          </View>
+
+          <ScrollView
+            style={[styles.panel, isWide && styles.panelWide]}
+            contentContainerStyle={styles.panelContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {children}
+          </ScrollView>
+        </View>
+
+        {ticker ? (
+          <View style={styles.ticker}>
+            <Text style={styles.tickerLabel}>BREAKING</Text>
+            <Text style={styles.tickerText} numberOfLines={1}>
+              {ticker}
+            </Text>
+          </View>
+        ) : null}
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#040E1F' },
+  safe: { flex: 1, backgroundColor: '#020810' },
+  brandHeaderPad: {
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+    backgroundColor: colors.navy,
+  },
+  topBarSlim: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+  },
+  bezel: {
+    flex: 1,
+    marginHorizontal: 6,
+    marginBottom: 4,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: '#1a2a44',
+    backgroundColor: '#040E1F',
+    overflow: 'hidden',
+  },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -159,6 +194,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
     gap: 6,
+    backgroundColor: 'rgba(0,0,0,0.35)',
   },
   topLeft: {
     flexDirection: 'row',
@@ -173,7 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.red,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 6,
+    borderRadius: 4,
     gap: 8,
     flexShrink: 1,
   },
@@ -182,85 +218,58 @@ const styles = StyleSheet.create({
   liveText: {
     color: colors.white,
     fontWeight: '900',
-    fontSize: 10,
-    letterSpacing: 0.8,
+    fontSize: 11,
+    letterSpacing: 1,
   },
-  brandStamp: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 6,
-    flexShrink: 0,
-  },
-  datestamp: {
-    color: 'rgba(255,255,255,0.92)',
-    fontWeight: '700',
-    fontSize: 10,
-    letterSpacing: 0.15,
-    textAlign: 'right',
-  },
-  logoBadge: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: colors.white,
-    borderWidth: 1.5,
-    borderColor: colors.gold,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  logoCorner: { width: 38, height: 38 },
+  topRightSpacer: { minWidth: 88 },
   headlineBar: {
     paddingHorizontal: spacing.md,
     paddingBottom: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(213,166,46,0.25)',
+  },
+  network: {
+    color: colors.red,
+    fontWeight: '900',
+    fontSize: 10,
+    letterSpacing: 1.2,
+    marginBottom: 2,
   },
   headline: {
     color: colors.gold,
     fontWeight: '800',
-    fontSize: 16,
-    letterSpacing: 0.3,
+    fontSize: 17,
+    letterSpacing: 0.2,
   },
-  desk: { flex: 1, paddingHorizontal: spacing.md, gap: spacing.sm },
-  anchor: {
-    height: 200,
-    borderRadius: 14,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: colors.gold,
-    backgroundColor: colors.navySecondary,
-  },
-  priya: { width: '100%', height: '100%' },
-  namePlate: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(7,29,59,0.88)',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  name: { color: colors.white, fontWeight: '900', fontSize: 16 },
-  idNo: { color: colors.gold, fontWeight: '700', fontSize: 12, marginTop: 2 },
-  hearFab: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+  body: { flex: 1 },
+  bodyWide: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.gold,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
+    paddingHorizontal: spacing.sm,
+    gap: spacing.sm,
+    alignItems: 'flex-start',
   },
-  hearFabText: { color: colors.navy, fontWeight: '800', fontSize: 12 },
+  stageWrap: {
+    alignItems: 'center',
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
+  },
+  stageWrapWide: {
+    paddingTop: spacing.md,
+  },
   panel: {
     flex: 1,
+    marginHorizontal: spacing.sm,
+    marginTop: spacing.sm,
+    marginBottom: spacing.sm,
     backgroundColor: colors.navy,
-    borderRadius: 14,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: 'rgba(213,166,46,0.35)',
+  },
+  panelWide: {
+    flex: 1,
+    marginHorizontal: 0,
+    marginTop: spacing.sm,
   },
   panelContent: { padding: spacing.md, paddingBottom: spacing.xxl },
   ticker: {

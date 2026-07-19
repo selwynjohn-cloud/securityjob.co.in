@@ -24,12 +24,25 @@ export const ta: TranslationSchema = {
     no: 'இல்லை',
     either: 'எதுவும் சரி',
     done: 'முடிந்தது',
+    stopAudio: 'ஒலியை நிறுத்து',
+    startAudio: 'ஒலியைத் தொடங்கு',
   },
   splash: {
     brand: 'Agile Group',
     appName: 'Security Job',
     tagline: 'Speak. Register. Find Your Security Job.',
     organisation: 'Agile Security Force Pvt. Ltd.',
+    ourGuard: 'எங்கள் காவலர் உங்களை வழிநடத்துவார்',
+    ourGuardHint: 'ஒவ்வொரு முறையும் ஆண் அல்லது பெண் வழிகாட்டி சீரற்ற முறையில் வருவார்.',
+    meetAnother: 'மற்றொரு வழிகாட்டியைக் காட்டு',
+    tapToHear: 'மீண்டும் கேட்க காவலரைத் தட்டவும்',
+    speakingLive: 'வழிகாட்டி பேசுகிறார்',
+    spokenIntroMale:
+      'வணக்கம். நான் Security Guard Arjun. இன்று உங்களை வழிநடத்த எனக்கு கடமை ஒதுக்கப்பட்டுள்ளது.',
+    spokenIntroFemale:
+      'வணக்கம். நான் Security Guide Priya. இன்று உங்களை வழிநடத்த எனக்கு கடமை ஒதுக்கப்பட்டுள்ளது.',
+    spokenBody:
+      'Agile Security Force Private Limited க்கு வரவேற்கிறோம். Security Job பாதுகாப்பு தொழிலுக்கான இந்தியாவின் முதல் அர்ப்பணிக்கப்பட்ட வேலை தளம். Verified jobs. Trusted opportunities. Secure futures. Security Job டாட் கோ டாட் இன். முழு சேவைகளுக்கு Agile Group டாட் கோ டாட் இன். மொழியைத் தேர்ந்தெடுக்கவும். இது ஆடியோ வழிகாட்டும் செயலி — ஹெட்ஃபோன் அல்லது ஒலியை உயர்த்துங்கள். பிறகு Continue அழுத்துங்கள்.',
   },
   language: {
     title: 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்',
@@ -48,6 +61,11 @@ export const ta: TranslationSchema = {
     speechManualHint: 'அடையாளம் உங்கள் தேர்ந்தெடுத்த மொழியில் இருக்கும்.',
     needsApiKey:
       'கிளவுட் பேச்சுக்கு API விசை வேண்டும். நிர்வாகி EXPO_PUBLIC_OPENAI_API_KEY அமைக்கட்டும், அல்லது பதிலைத் தட்டச்சு செய்யுங்கள்.',
+    audioTitle: 'ஆடியோ வழிகாட்டும் செயலி',
+    audioHint:
+      'இது ஆடியோ வழிகாட்டும் செயலி. ஹெட்ஃபோன் பயன்படுத்துங்கள் அல்லது ஒலியை உயர்த்துங்கள்.',
+    selectLanguage: '1. உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்',
+    audioStep: '2. ஆடியோ வழிகாட்டல்',
   },
   guide: {
     title: 'உங்கள் பாதுகாப்பு வழிகாட்டியைத் தேர்ந்தெடுக்கவும்',
@@ -57,7 +75,10 @@ export const ta: TranslationSchema = {
   },
   welcome: {
     company: 'Agile Security Force',
-    platformTagline: 'இந்தியாவின் நம்பகமான பாதுகாப்பு வேலை தளம்',
+    legalName: 'Agile Security Force Private Limited',
+    platformTagline: 'பாதுகாப்பு தொழிலுக்கான இந்தியாவின் முதல் அர்ப்பணிக்கப்பட்ட வேலை தளம்',
+    promiseLine: 'Verified Jobs. Trusted Opportunities. Secure Futures.',
+    discoverServices: 'எங்கள் முழு சேவைகளைக் காணுங்கள்: www.agilegroup.co.in',
     message:
       'வணக்கம்! நான் உங்கள் Agile Security Force வழிகாட்டி — இந்தியாவின் நம்பகமான பாதுகாப்பு குடும்பத்தின் ஒரு பகுதி. 30 ஆண்டுகளாக Agile பாதுகாக்கிறது; 24,000+ காவலர்கள், 500+ வாடிக்கையாளர்கள். securityjob.co.in வேலைகளைக் காட்டி, இணையதளம் போன்ற இலவசப் பதிவு செய்ய உதவுவேன். பதிவுக்குப் பிறகு ஆட்சேர்ப்பு குழு தொடர்பு கொள்ளும்.',
     spoken:
@@ -76,7 +97,8 @@ export const ta: TranslationSchema = {
     statYears: '30+ ஆண்டுகள்',
     statGuards: '24,000+ காவலர்கள்',
     statClients: '500+ வாடிக்கையாளர்கள்',
-    statFree: 'இலவசப் பதிவு',
+    statLocations: '1,410+ இடங்கள்',
+    statFree: 'இலவச ஆட்சேர்ப்பு',
   },
   talk: {
     introTitle: 'இப்போது உங்கள் விவரங்களை எடுப்பேன்',
@@ -403,14 +425,24 @@ export const ta: TranslationSchema = {
     hint: 'திரை உரையைக் குறைக்கும். முழு குரல் வழிகாட்டல் அடுத்த மைல்கல்லில் வரும்.',
   },
   studio: {
-    headline: 'Security Job Live with SG. Priya',
+    headline: 'Security Job Live — Welcome Desk',
     ticker: 'FREE registration · Recruiters call back within 24 hours · No fees',
+    welcomeBy: 'வரவேற்கிறோம் — இன்றைய வழிகாட்டி {{name}}',
     intro:
-      'Namaste. I am SG. Priya, Id.No. 010190073. Welcome to Agile Security Force — like your interactive TV news desk. Choose a channel below, or follow me.',
+      'வணக்கம். Agile Security Force க்கு வரவேற்கிறோம் — பாதுகாப்பு வேலைக்கான உங்கள் டிவி செய்தி மேசை. கீழே உள்ள சேனல்களில் விரைவாக செல்லுங்கள்.',
+    whyJoinTitle: 'ஏன் Agile உடன் சேர வேண்டும்?',
+    whyJoinBody:
+      'Agile Security Force இந்தியாவின் நம்பகமான பாதுகாப்பு குடும்பம் — 30+ ஆண்டுகள், 24,000+ காவலர்கள், 500+ வாடிக்கையாளர்கள்.',
+    jumpHint: 'விரைவாக செல்ல — கீழே ஒரு சேனலைத் தேர்ந்தெடுக்கவும்:',
+    spokenIntroMale:
+      'Namaste. I am Security Guard Arjun, assigned duty to guide you today. Welcome to the Security Job news desk. Why join Agile? Over 30 years, 24,000 guards, 1,410 locations. Choose a channel below.',
+    spokenIntroFemale:
+      'Namaste. I am Security Guide Priya, assigned duty to guide you today. Welcome to the Security Job news desk. Why join Agile? Over 30 years, 24,000 guards, 1,410 locations. Choose a channel below.',
     spokenIntro:
-      'Namaste. I am Security Guide Priya. Turn up your volume. Choose your language, then pick a channel — Agile company, available jobs, future openings, free registration, recruitment anthem, or contact.',
-    volumeHint: 'Please turn up your volume to hear SG. Priya clearly.',
-    startWithPriya: 'Start with Priya — About Agile',
+      'Namaste. Welcome to Agile Security Force. I am your Security Guide on the news desk. Why join Agile? Over 30 years, 24,000 guards, 1,410 locations. Choose a channel below.',
+    volumeHint: 'Please turn up your volume or use headphones to hear your guide clearly.',
+    startWithPriya: 'Start with guide — About Agile',
+    startWithGuide: 'வழிகாட்டியுடன் தொடங்குங்கள் — Why Join Agile',
     chCompany: '1. Agile — Most Trusted Company',
     chCompanySub: 'Why Agile is great for your career',
     chJobs: '2. Available Jobs',

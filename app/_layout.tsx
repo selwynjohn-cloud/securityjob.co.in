@@ -7,7 +7,9 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { StopAudioButton } from '@/src/components/StopAudioButton';
 import { AppProvider, useApp } from '@/src/store/AppContext';
+import { SpeechPlaybackProvider } from '@/src/store/SpeechPlayback';
 import { colors } from '@/src/theme/colors';
 
 export { ErrorBoundary } from 'expo-router';
@@ -30,7 +32,7 @@ function RootNav() {
   }
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
         <Stack.Screen name="index" />
@@ -55,7 +57,8 @@ function RootNav() {
         <Stack.Screen name="apply/[id]" />
         <Stack.Screen name="(main)" />
       </Stack>
-    </>
+      <StopAudioButton />
+    </View>
   );
 }
 
@@ -63,7 +66,9 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppProvider>
-        <RootNav />
+        <SpeechPlaybackProvider>
+          <RootNav />
+        </SpeechPlaybackProvider>
       </AppProvider>
     </GestureHandlerRootView>
   );

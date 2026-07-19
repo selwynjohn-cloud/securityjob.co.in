@@ -25,15 +25,20 @@ export function GuidePortrait({
   style,
 }: Props) {
   const { guide, t } = useApp();
-  const g = gender ?? guide ?? 'male';
+  const g = gender ?? guide ?? 'female';
   const dim = sizes[size];
 
   return (
     <View style={[styles.wrap, style]}>
       <Image
         source={IMAGES[g]}
-        style={{ width: dim, height: dim * 1.25, borderRadius: 16 }}
-        resizeMode="cover"
+        style={{
+          width: dim,
+          height: dim * 1.35,
+          borderRadius: 16,
+          backgroundColor: colors.navySecondary,
+        }}
+        resizeMode="contain"
         accessibilityLabel={t('common.aiGuideLabel')}
       />
       {showLabel ? (

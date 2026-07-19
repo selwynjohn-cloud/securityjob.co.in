@@ -1,147 +1,134 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { type Href, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Screen } from '@/src/components/Screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { BigButton } from '@/src/components/BigButton';
+import { BrandHeader } from '@/src/components/BrandHeader';
 import { LANGUAGE_OPTIONS } from '@/src/i18n/languages';
-import { isCloudSpeechConfigured } from '@/src/services/speech';
 import { useApp } from '@/src/store/AppContext';
 import { colors } from '@/src/theme/colors';
-import { spacing, typography } from '@/src/theme/typography';
-import type { SpeechMode } from '@/src/types';
+import { spacing } from '@/src/theme/typography';
 
 export default function LanguageScreen() {
   const router = useRouter();
-  const { t, language, setLanguage, speechMode, setSpeechMode, guide, setGuide } =
-    useApp();
-  const cloudReady = isCloudSpeechConfigured();
-
-  const ModeRow = ({ mode, titleKey, hintKey }: { mode: SpeechMode; titleKey: string; hintKey: string }) => {
-    const selected = speechMode === mode;
-    return (
-      <Pressable
-        onPress={() => setSpeechMode(mode)}
-        style={[styles.modeRow, selected && styles.rowSelected]}
-      >
-        <Ionicons
-          name={selected ? 'radio-button-on' : 'radio-button-off'}
-          size={24}
-          color={selected ? colors.gold : colors.navySecondary}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.label, selected && styles.labelSelected]}>{t(titleKey)}</Text>
-          <Text style={[styles.hint, selected && styles.hintSelected]}>{t(hintKey)}</Text>
-        </View>
-      </Pressable>
-    );
-  };
+  const { t, language, setLanguage } = useApp();
 
   return (
-    <Screen title={t('language.title')} showLanguage={false} showBack>
-      {LANGUAGE_OPTIONS.map((lang) => {
-        const selected = language === lang.code;
-        return (
-          <Pressable
-            key={lang.code}
-            onPress={() => setLanguage(lang.code)}
-            style={[styles.row, selected && styles.rowSelected]}
-          >
-            <View>
-              <Text style={[styles.label, selected && styles.labelSelected]}>
-                {lang.nativeLabel}
-              </Text>
-              <Text style={[styles.hint, selected && styles.hintSelected]}>
-                {lang.englishName}
-              </Text>
-            </View>
-            <Pressable
-              onPress={() => Alert.alert(t('language.hearSample'), lang.nativeLabel)}
-              hitSlop={10}
-              accessibilityLabel={t('language.hearSample')}
-            >
-              <Ionicons
-                name="volume-high"
-                size={28}
-                color={selected ? colors.gold : colors.navySecondary}
-              />
-            </Pressable>
-          </Pressable>
-        );
-      })}
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
+      <View style={styles.topBar}>
+        <Pressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
+          <Ionicons name="arrow-back" size={24} color={colors.white} />
+        </Pressable>
+      </View>
 
-      <Text style={styles.section}>{t('language.speechModeTitle')}</Text>
-      <ModeRow
-        mode="auto"
-        titleKey="language.speechAuto"
-        hintKey="language.speechAutoHint"
-      />
-      <ModeRow
-        mode="manual"
-        titleKey="language.speechManual"
-        hintKey="language.speechManualHint"
-      />
+      <View style={styles.body}>
+        <BrandHeader showStats={false} compact />
 
-      {!cloudReady ? (
-        <Text style={styles.apiNote}>{t('language.needsApiKey')}</Text>
-      ) : null}
+        <Text style={styles.step}>1. {t('language.title')}</Text>
+        <View style={styles.langList}>
+          {LANGUAGE_OPTIONS.map((lang) => {
+            const selected = language === lang.code;
+            return (
+              <Pressable
+                key={lang.code}
+                onPress={() => setLanguage(lang.code)}
+                style={[styles.row, selected && styles.rowSelected]}
+              >
+                <View>
+                  <Text style={[styles.label, selected && styles.labelSelected]}>
+                    {lang.nativeLabel}
+                  </Text>
+                  <Text style={[styles.hint, selected && styles.hintSelected]}>
+                    {lang.englishName}
+                  </Text>
+                </View>
+                <Ionicons
+                  name={selected ? 'checkmark-circle' : 'ellipse-outline'}
+                  size={26}
+                  color={selected ? colors.gold : 'rgba(255,255,255,0.35)'}
+                />
+              </Pressable>
+            );
+          })}
+        </View>
 
-      <View style={{ height: spacing.lg }} />
-      <BigButton
-        label={t('common.continue')}
-        onPress={() => {
-          setGuide('female');
-          router.replace('/home' as Href);
-        }}
-        variant="gold"
-      />
-    </Screen>
+        <View style={styles.volumeCard}>
+          <Ionicons name="headset" size={28} color={colors.gold} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.step}>2. {t('language.audioTitle')}</Text>
+            <Text style={styles.volumeText}>{t('language.audioHint')}</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.footer}>
+        <BigButton
+          label={t('common.continue')}
+          onPress={() => router.replace('/home' as Href)}
+          variant="gold"
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.navy },
+  topBar: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  backBtn: { padding: 4, alignSelf: 'flex-start' },
+  body: {
+    flex: 1,
+    paddingHorizontal: spacing.lg,
+  },
+  step: {
+    color: colors.gold,
+    fontWeight: '900',
+    fontSize: 16,
+    marginBottom: spacing.sm,
+  },
+  langList: { gap: 8, marginBottom: spacing.lg },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 64,
+    minHeight: 56,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    marginBottom: spacing.sm,
-  },
-  modeRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.sm,
-    minHeight: 64,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    marginBottom: spacing.sm,
+    borderColor: 'rgba(213,166,46,0.35)',
+    backgroundColor: colors.navySecondary,
   },
   rowSelected: {
     borderColor: colors.gold,
-    backgroundColor: colors.navy,
+    backgroundColor: '#0a1628',
   },
-  label: { ...typography.bodyLarge, fontWeight: '700' },
-  labelSelected: { color: colors.white },
-  hint: { ...typography.caption, marginTop: 2 },
-  hintSelected: { color: '#E5E7EB' },
-  section: {
-    ...typography.subtitle,
-    marginTop: spacing.md,
-    marginBottom: spacing.sm,
+  label: { color: colors.white, fontSize: 17, fontWeight: '700' },
+  labelSelected: { color: colors.gold },
+  hint: { color: 'rgba(255,255,255,0.65)', fontSize: 12, marginTop: 2 },
+  hintSelected: { color: 'rgba(255,255,255,0.85)' },
+  volumeCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    borderWidth: 1.5,
+    borderColor: colors.gold,
+    borderRadius: 14,
+    padding: spacing.md,
+    backgroundColor: 'rgba(213,166,46,0.1)',
   },
-  apiNote: {
-    ...typography.caption,
-    color: colors.warning,
-    marginTop: spacing.sm,
-    fontWeight: '600',
+  volumeText: {
+    color: colors.white,
+    fontWeight: '700',
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  footer: {
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.md,
+    paddingTop: spacing.sm,
   },
 });
